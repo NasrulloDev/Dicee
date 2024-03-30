@@ -8,18 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var amountOfDice = 2
+    
     @State private var total = 0
     
-    @State private var diceResult = 0
+    @State private var diceResults: [Int] = [1,1]
     
     var body: some View {
         VStack {
             Text("Total: \(total)")
-            Text(String(diceResult))
+            
+            ForEach(diceResults, id: \.self){ dice in
+                Text(String(dice))
+            }
+            
             Button("Roll dice"){
+                diceResults = []
                 total = 0
-                diceResult = Int.random(in: 1..<7)
-                total += diceResult
+                for _ in 0..<amountOfDice {
+                    let diceResult = Int.random(in: 1..<7)
+                    diceResults.append(diceResult)
+                    total += diceResult
+                }
+                
             }
         }
         .padding()
