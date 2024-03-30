@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var total = 0
+    
+    @State private var diceResult = 0
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Total: \(total)")
+            Text(String(diceResult))
+            Button("Roll dice"){
+                total = 0
+                diceResult = Int.random(in: 1..<7)
+                total += diceResult
+            }
         }
         .padding()
     }
