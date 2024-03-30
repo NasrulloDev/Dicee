@@ -11,11 +11,14 @@ struct ContentView: View {
     @State private var amountOfDice = 2
     
     @State private var total = 0
+    @State private var previous = 0
     
     @State private var diceResults: [Int] = [1,1]
     
     var body: some View {
         VStack {
+            Text("Previous total: \(previous)")
+            
             Text("Total: \(total)")
             
             ForEach(diceResults, id: \.self){ dice in
@@ -23,6 +26,7 @@ struct ContentView: View {
             }
             
             Button("Roll dice"){
+                previous = total
                 diceResults = []
                 total = 0
                 for _ in 0..<amountOfDice {
