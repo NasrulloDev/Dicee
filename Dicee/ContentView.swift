@@ -11,6 +11,8 @@ struct ContentView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var amountOfDice = 2
+    @State private var typeOfDice = 6
+    let diceTypes = [4, 6, 8, 10, 12, 20, 100]
     
     @State private var total = 0
     @State private var previous = 0
@@ -20,35 +22,53 @@ struct ContentView: View {
     @State private var showEdit = false
     
     var body: some View {
-        VStack {
-            Text("Previous total: \(previous)")
-            
-            Text("Total: \(total)")
-            
-            ForEach(diceResults, id: \.self){ dice in
-                Text(String(dice))
+        NavigationStack{
+            VStack {
+                Text("Previous total: \(previous)")
+                
+                Text("Total: \(total)")
+                
+                HStack{
+                    ForEach(diceResults, id: \.self){ dice in
+                        Text(String(dice))
+                    }
+                }
+                
+                Button("Roll dice"){
+                    previous = total
+                    rollDice()
+                }
+                
             }
-            
-            Button("Roll dice"){
-                previous = total
-                rollDice()
-            }
-            
-            Button("Settings"){
-                showEdit = true
-            }
-        }
-        .sheet(isPresented: $showEdit) {
-            Form{
-                Section("How many dices do you want to roll?"){
-                    TextField("Amount...", value: $amountOfDice, format: .number)
+            .toolbar {
+                ToolbarItem {
+                    Button("Settings"){
+                        showEdit = true
+                    }
                 }
             }
-            Button("Apply"){
-                showEdit = false
-                restart()
+            .sheet(isPresented: $showEdit) {
+                Form{
+                    Section("How many dices do you want to roll?"){
+                        TextField("Amount...", value: $amountOfDice, format: .number)
+                    }
+                    
+                    Section("How many sided dice do you want to roll?"){
+                        Picker("Sides..", selection: $typeOfDice){
+                            ForEach(diceTypes, id: \.self){
+                                Text(String($0))
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                }
+                Button("Apply"){
+                    previous = total
+                    showEdit = false
+                    restart()
+                }
+                
             }
-
         }
         .padding()
     }
@@ -57,7 +77,7 @@ struct ContentView: View {
         diceResults = []
         total = 0
         for _ in 0..<amountOfDice {
-            let diceResult = Int.random(in: 1..<7)
+            let diceResult = Int.random(in: 1..<(typeOfDice + 1))
             diceResults.append(diceResult)
             total += diceResult
         }
