@@ -24,15 +24,24 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             VStack {
-                Text("Previous total: \(previous)")
+                Text("Previous: \(previous)")
+                
+                Spacer()
                 
                 Text("Total: \(total)")
+                
+                Spacer()
+                Spacer()
                 
                 HStack{
                     ForEach(diceResults, id: \.self){ dice in
                         Text(String(dice))
+                            .font(.largeTitle)
+                            .padding(.horizontal)
                     }
                 }
+                
+                Spacer()
                 
                 Button("Roll dice"){
                     previous = total
